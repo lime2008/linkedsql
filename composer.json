@@ -1,0 +1,15 @@
+{
+    "name": "lime2008/linkedsql",
+    "description": "Baidu realizes picture recognition text package(百度实现图片识别文字包)",
+    "keywords": ["php","linked","sql","mysql","stmt"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "limeuwu",
+            "email": "liyuanzhe08@qq.com",
+            "homepage": "https://www.lihouse.xyz/"
+        }
+    ],
+    "require": {},
+    }
+}
