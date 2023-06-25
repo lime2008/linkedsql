@@ -11,21 +11,19 @@ class Select
     public function Do($data)
     {
         $exception = true;
-        try{
-        if (isset($data['bind'])) {
-            $this->bind = $data['bind'];
-        }
-        $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
-        echo $sql;
-        mysqli_stmt_prepare($this->stmt, $sql);
-        if (!$data['clause']) {
+        try {
+            if (isset($data['bind'])) {
+                $this->bind = $data['bind'];
+            }
+            $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
+            mysqli_stmt_prepare($this->stmt, $sql);
+            if (!$data['clause']) {
+                mysqli_stmt_execute($this->stmt);
+                goto common;
+            }
+            $this->stmt->bind_param($this->bind_mark, ...(array) $data['bind']);
             mysqli_stmt_execute($this->stmt);
-            goto common;
-        }
-        $this->stmt->bind_param($this->bind_mark, ...(array) $data['bind']);
-        mysqli_stmt_execute($this->stmt);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             $exception = false;
         }
         common:
@@ -34,7 +32,6 @@ class Select
         while ($row = $res->fetch_assoc()) {
             array_unshift($tmparray, $row);
         }
-
         if ($exception && empty(mysqli_stmt_error($this->stmt))) {
             return array('statu' => true, 'reason' => null, 'callback' => $tmparray);
         } else {
@@ -57,18 +54,26 @@ class Select
         }
         $bind_data = '';
         $mark_data = '';
+        $tmpnum = 0;
+        $notend = true;
+        $count = count($value) - 1;
         foreach ($this->bind as $tmp) {
+            if ($tmpnum == $count) {
+                $notend = false;
+            }
             if (is_int($tmp)) {
                 $this->bind_mark .= 'i';
             } else {
                 $this->bind_mark .= 's';
             }
-            if ($tmp !== end($args)) {
+            if ($notend) {
                 $bind_data .= $tmp . ', ';
+                $mark_data .= '? ,';
             } else {
                 $bind_data .= $tmp;
                 $mark_data .= '?';
             }
+            $tmpnum++;
         }
         $sql = 'SELECT ' . $key_data . ' FROM ' . $table . ' WHERE ' . $clause;
         //echo $sql;
