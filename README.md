@@ -1,5 +1,5 @@
 # linkedsql
-[![php_version](https://img.shields.io/npm/v/oicq/latest.svg)](https://www.npmjs.com/package/oicq)
+[![php_version](https://img.shields.io/badge/php_version-%3E5.3-blue)](https://www.php.net/downloads)
 
 一个方便，轻巧，解耦性强的php链式预处理操作数据库  
 可以根据自己需要修改或添加目录下的入口或操作文件来达到自己的需求
@@ -8,7 +8,10 @@
 SELECT:  
 ```php
 $sql->select('表名')->key(array('想查询的键',...))->clause(attay('查询的键',...))->bind(array('绑定查询值',...))->run();  
-当然也可不加子句:$sql->select('表名')->key(array('想查询的键'))->run(); 
+```
+当然也可不加子句:
+```php
+$sql->select('表名')->key(array('想查询的键'))->run(); 
 ```
 UPDATE:  
 ```php
