@@ -56,7 +56,7 @@ class Select
         $mark_data = '';
         $tmpnum = 0;
         $notend = true;
-        $count = count($value) - 1;
+        $count = count($this->bind) - 1;
         foreach ($this->bind as $tmp) {
             if ($tmpnum == $count) {
                 $notend = false;
