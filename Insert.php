@@ -33,7 +33,7 @@ class Insert
         if ($res && empty(mysqli_stmt_error($this->stmt))) {
             return array('statu' => true, 'reason' => null);
         } else {
-            return array('statu' => false, 'reason' => '查询失败','err'=>$e.' '.mysqli_stmt_error($this->stmt));
+            return array('statu' => false, 'reason' => '查询失败', 'err' => $e . ' ' . mysqli_stmt_error($this->stmt));
         }
     }
     private function GenerateSql($skey, $value, $table)
@@ -52,19 +52,26 @@ class Insert
         }
         $bind_data = '';
         $mark_data = '';
+        $tmpnum = 0;
+        $notend = true;
+        $count = count($value) - 1;
         foreach ($value as $tmp) {
+            if ($tmpnum == $count) {
+                $notend = false;
+            }
             if (is_int($tmp)) {
                 $this->bind_mark .= 'i';
             } else {
                 $this->bind_mark .= 's';
             }
-            if ($tmp !== end($value)) {
+            if ($notend) {
                 $bind_data .= $tmp . ', ';
                 $mark_data .= '? ,';
             } else {
                 $bind_data .= $tmp;
                 $mark_data .= '?';
             }
+            $tmpnum++;
         }
         $sql = 'INSERT INTO ' . $table . ' ( ' . $key_data . ' ) VALUES ( ' . $mark_data . ' )';
         return $sql;
