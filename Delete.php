@@ -17,7 +17,11 @@ class Delete
         }else{
             $this->bind=$data['bind'];
         }
-        $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
+        if (!isset($data['clause'])) {
+            $sql = $this->GenerateSql(false, $data['key'], $data['table']);
+        }else{
+                $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
+        }
         mysqli_stmt_prepare($this->stmt, $sql);
         $this->stmt->bind_param($this->bind_mark, ...(array) $data['bind']);
         mysqli_stmt_execute($this->stmt);
