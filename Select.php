@@ -12,21 +12,24 @@ class Select
     {
         $exception = true;
         try {
+            if (!isset($data['clause'])) {
+                $sql = $this->GenerateSql(false, $data['key'], $data['table']);
+                mysqli_stmt_prepare($this->stmt, $sql);
+                mysqli_stmt_execute($this->stmt);
+                goto common;
+            }
             if (isset($data['bind'])) {
                 $this->bind = $data['bind'];
             }
             $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
             mysqli_stmt_prepare($this->stmt, $sql);
-            if (!$data['clause']) {
-                mysqli_stmt_execute($this->stmt);
-                goto common;
-            }
             $this->stmt->bind_param($this->bind_mark, ...(array) $data['bind']);
             mysqli_stmt_execute($this->stmt);
         } catch (Exception $e) {
             $exception = false;
         }
         common:
+        
         $tmparray = array();
         $res = $this->stmt->get_result();
         while ($row = $res->fetch_assoc()) {
@@ -76,7 +79,6 @@ class Select
             $tmpnum++;
         }
         $sql = 'SELECT ' . $key_data . ' FROM ' . $table . ' WHERE ' . $clause;
-        //echo $sql;
         return $sql;
     }
 }
