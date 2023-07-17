@@ -29,7 +29,6 @@ class Update
                 mysqli_stmt_execute($this->stmt);
                 goto common;
             }
-          
             $this->stmt->bind_param($this->bind_mark, ...(array) array_merge($data['value'], $data['bind']));
             mysqli_stmt_execute($this->stmt);
         } catch (Exception $e) {
