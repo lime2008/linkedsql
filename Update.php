@@ -18,13 +18,18 @@ class Update
                 $this->bind = $data['bind'];
             }
             $this->value = $data['value'];
-            $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
+            if (!isset($data['clause'])) {
+            $sql = $this->GenerateSql(false, $data['key'], $data['table']);
+            }else{
+                $sql = $this->GenerateSql($data['clause'], $data['key'], $data['table']);
+            }
             mysqli_stmt_prepare($this->stmt, $sql);
             if (!$data['clause']) {
                 $this->stmt->bind_param($this->bind_mark, ...(array) $data['value']);
                 mysqli_stmt_execute($this->stmt);
                 goto common;
             }
+          
             $this->stmt->bind_param($this->bind_mark, ...(array) array_merge($data['value'], $data['bind']));
             mysqli_stmt_execute($this->stmt);
         } catch (Exception $e) {
