@@ -10,7 +10,8 @@ class GetSqlFunc
     private $RequestLocking = false;
     private $Mode = null;
     private $Module = array();
-    private $Savingopt = false;
+    private $requires = array();
+    private $Savingopt = true;
     private $StopReason = array();
     private array $SupportedFunc = array('select', 'update', 'insert', 'delete');
     private $table;
@@ -77,6 +78,7 @@ class GetSqlFunc
     function __call($function, $args)
     {
         $this->Mode = $function;
+        $this->FuncEssential = array();
         if ($this->ModeChecking($function)) {
             $this->OperateInitializing($function, $args);
         } else {
@@ -92,9 +94,11 @@ class GetSqlFunc
                 return array('statu' => false, 'reason' => $this->StopReason);
             } else {
                 $callback = $this->Module[$this->Mode]->Do($this->FuncEssential);
+                //var_dump($this->Module);
                 if ($this->Savingopt) {
                     unset($this->Module[$this->Mode]);
                 }
+                $this->Mode = '';
                 return $callback;
             }
         } else {
@@ -103,23 +107,26 @@ class GetSqlFunc
     }
     public function BoostingModule($module)
     {
+        if (in_array($module, $this->requires))
+        return;
         switch ($module) {
             case 'stmt':
-                require './StmtInit.php';
+                require 'StmtInit.php';
                 break;
             case 'select':
-                require './Select.php';
+                require 'Select.php';
                 break;
             case 'update':
-                require './Update.php';
+                require 'Update.php';
                 break;
             case 'insert':
-                require './Insert.php';
+                require 'Insert.php';
                 break;
             case 'delete':
-                require './Delete.php';
+                require 'Delete.php';
                 break;
         }
+        array_push($this->requires,$module);
     }
     public function key($data)
     {
@@ -129,10 +136,6 @@ class GetSqlFunc
     {
         if ($this->RequestLocking) {
             return false;
-        }
-        if (count($data) == 0) {
-            $this->clause = false;
-            return $this;
         }
         $clause = '';
         foreach ($data as $tmp) {
@@ -190,10 +193,3 @@ class GetSqlFunc
         }
     }
 }
-$local = '127.0.0.1';
-$user = '';
-$pwd = '';
-$dbname = '';
-$con = new mysqli($local, $user, $pwd, $dbname);
-$sql = new GetSqlFunc($con);
-$sql->Savingopt(true);
