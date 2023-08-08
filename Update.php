@@ -29,8 +29,10 @@ class Update
                 mysqli_stmt_execute($this->stmt);
                 goto common;
             }
+          
             $this->stmt->bind_param($this->bind_mark, ...(array) array_merge($data['value'], $data['bind']));
             mysqli_stmt_execute($this->stmt);
+            
         } catch (Exception $e) {
             $exception = false;
             $this->e = $e;
@@ -42,9 +44,10 @@ class Update
             $res = true;
         }
         if ($res && $exception && empty(mysqli_stmt_error($this->stmt))) {
-            return array('statu' => true, 'reason' => null);
+            return array('status' => true, 'reason' => null);
         } else {
-            return array('statu' => false, 'reason' => '执行失败或没有匹配的数据', 'error' => $this->e . ' ' . mysqli_stmt_error($this->stmt));
+            
+            return array('status' => false, 'reason' => '执行失败或没有匹配的数据', 'error' => $this->e . ' ' . mysqli_stmt_error($this->stmt));
         }
     }
     private function GenerateSql($clause, $args, $table)
@@ -76,6 +79,7 @@ class Update
                 $this->bind_mark .= 's';
             }
         }
+        
         $sql = 'UPDATE ' . $table . ' SET ' . $key_data . ' WHERE ' . $clause;
         return $sql;
     }

@@ -25,9 +25,6 @@ class Select
             mysqli_stmt_prepare($this->stmt, $sql);
             $this->stmt->bind_param($this->bind_mark, ...(array) $data['bind']);
             mysqli_stmt_execute($this->stmt);
-        } catch (Exception $e) {
-            $exception = false;
-        }
         common:
         
         $tmparray = array();
@@ -35,10 +32,13 @@ class Select
         while ($row = $res->fetch_assoc()) {
             array_unshift($tmparray, $row);
         }
-        if ($exception && empty(mysqli_stmt_error($this->stmt))) {
-            return array('statu' => true, 'reason' => null, 'callback' => $tmparray);
+        if (empty(mysqli_stmt_error($this->stmt))) {
+            return array('status' => true, 'reason' => null, 'callback' => $tmparray);
         } else {
-            return array('statu' => false, 'reason' => '查询失败');
+            return array('status' => false, 'reason' => '查询失败');
+        }
+        } catch (Exception $e) {
+            return array('status' => false, 'reason' => '查询失败'.$e);
         }
     }
     private function GenerateSql($clause, $args, $table)

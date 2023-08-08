@@ -13,7 +13,7 @@ class Delete
         $exception = true;
         try{
         if (!isset($data['bind']) or !isset($data['clause'])) {
-            return array('statu' => false, 'reason' => '没有绑定数据');
+            return array('status' => false, 'reason' => '没有绑定数据');
         }else{
             $this->bind=$data['bind'];
         }
@@ -27,6 +27,7 @@ class Delete
         mysqli_stmt_execute($this->stmt);
         }
         catch(Exception $e){
+        
             $exception = false;
         }
         $res=true;
@@ -34,10 +35,10 @@ class Delete
             $res=false;
         }
         if ($res && $exception && empty(mysqli_stmt_error($this->stmt))) {
-            echo mysqli_affected_rows($data['con']);
-            return array('statu' => true, 'reason' => null);
+            return array('status' => true, 'reason' => null);
         } else {
-            return array('statu' => false, 'reason' => '执行失败或没有匹配的数据');
+
+            return array('status' => false, 'reason' => '执行失败或没有匹配的数据');
         }
     }
     private function GenerateSql($clause, $args, $table)

@@ -14,7 +14,7 @@ class Insert
             if (isset($data['value'])) {
                 $this->value = false;
             }
-            $sql = $this->GenerateSql($data['key'], $data['value'], $data['table']);
+            $sql = $this->GenerateSql($data['key'], $data['value'], $data['table']);              
             mysqli_stmt_prepare($this->stmt, $sql);
             if (!$data['value']) {
                 try {
@@ -31,9 +31,9 @@ class Insert
         }
         common:
         if ($res && empty(mysqli_stmt_error($this->stmt))) {
-            return array('statu' => true, 'reason' => null);
+            return array('status' => true, 'reason' => null);
         } else {
-            return array('statu' => false, 'reason' => '查询失败', 'err' => $e . ' ' . mysqli_stmt_error($this->stmt));
+            return array('status' => false, 'reason' => '查询失败','err'=>$e.' '.mysqli_stmt_error($this->stmt));
         }
     }
     private function GenerateSql($skey, $value, $table)
@@ -56,7 +56,7 @@ class Insert
         $notend = true;
         $count = count($value) - 1;
         foreach ($value as $tmp) {
-            if ($tmpnum == $count) {
+            if($tmpnum == $count){
                 $notend = false;
             }
             if (is_int($tmp)) {
@@ -65,6 +65,7 @@ class Insert
                 $this->bind_mark .= 's';
             }
             if ($notend) {
+                
                 $bind_data .= $tmp . ', ';
                 $mark_data .= '? ,';
             } else {

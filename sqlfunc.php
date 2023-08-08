@@ -19,34 +19,27 @@ class GetSqlFunc
     function __construct($value)
     {
         $this->con = $value;
-        $this->BoostingModule('stmt');
-        $this->Module['stmt'] = new StmtInit();
-        $tmp = $this->Module['stmt']->StmtInit($this->con);
-        if ($tmp['statu']) {
-            $this->stmt = $tmp['callback'];
-        } else {
-            return $tmp;
-        }
+        $this->stmt = mysqli_stmt_init($this->con);
         $this->FuncEssential['clause'] = false;
     }
     public function OperateInitializing($mode, $args)
     {
         if (!count($args) === 1) {
-            return array('statu' => false, 'reason' => '数据表格式不符合规范');
+            return array('status' => false, 'reason' => '数据表格式不符合规范');
         } else {
             $this->FuncEssential['table'] = $args[0];
-            return array('statu' => true, 'reason' => null);
+            return array('status' => true, 'reason' => null);
         }
     }
     public function ModeChecking($mode)
     {
-        $statu = false;
+        $status = false;
         foreach ($this->SupportedFunc as $tmp) {
             if ($tmp == $mode) {
-                $statu = true;
+                $status = true;
             }
         }
-        if ($statu) {
+        if ($status) {
             return true;
         } else {
             return false;
@@ -91,7 +84,7 @@ class GetSqlFunc
     {
         if (isset($this->Mode)) {
             if ($this->RequestLocking) {
-                return array('statu' => false, 'reason' => $this->StopReason);
+                return array('status' => false, 'reason' => $this->StopReason);
             } else {
                 $callback = $this->Module[$this->Mode]->Do($this->FuncEssential);
                 //var_dump($this->Module);
@@ -102,7 +95,7 @@ class GetSqlFunc
                 return $callback;
             }
         } else {
-            return array('statu' => false, 'reason' => '模式未设置');
+            return array('status' => false, 'reason' => '模式未设置');
         }
     }
     public function BoostingModule($module)
@@ -140,7 +133,7 @@ class GetSqlFunc
         $clause = '';
         foreach ($data as $tmp) {
             if ($tmp !== end($data)) {
-                $clause .= $tmp . '=?, ';
+                $clause .= $tmp . '=? AND ';
             } else {
                 $clause .= $tmp . '=? ';
             }
