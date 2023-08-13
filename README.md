@@ -3,6 +3,7 @@
 
 一个方便，轻巧，解耦性强的php链式预处理操作数据库  
 可以根据自己需要修改或添加目录下的入口或操作文件来达到自己的需求
+近期修复了诸多bug，可以放心使用，本仓库还会继续随着个人项目开发的需求而持续优化更新
 # How to use?
 填写好数据库信息并实例化类，各个使用例子如下:  
 SELECT:  
@@ -23,8 +24,8 @@ $sql->insert('表名')->key(array('想插入的值'))->value(array('修改值',.
 ```
 DELETE:  
 ```php
-$sql->delete('表名')->key(array('想删除的值'))->clause(array('查询的键',...))->bind(array('绑定值',...))->run();  
-$sql->delete('表名')->key(array('想删除的值'))->run();  
+$sql->delete('表名')->clause(array('查询的键',...))->bind(array('绑定值',...))->run();  
+$sql->delete('表名')->run();  
 ```
 # More
 喜欢的话点一个Star吧⭐！
