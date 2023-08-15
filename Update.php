@@ -1,4 +1,5 @@
 <?php
+namespace GetSqlFunc\Update;
 class Update
 {
     private $stmt;
@@ -6,7 +7,7 @@ class Update
     private $bind;
     private $e;
     private $value;
-    function __construct($value)
+    function Stmt_Loader($value)
     {
         $this->stmt = $value;
     }

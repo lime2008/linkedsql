@@ -1,10 +1,11 @@
 <?php
+namespace GetSqlFunc\Select;
 class Select
 {
     private $stmt;
     private $bind_mark;
     private $bind;
-    function __construct($value)
+    function Stmt_Loader($value)
     {
         $this->stmt = $value;
     }

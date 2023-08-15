@@ -1,10 +1,11 @@
 <?php
+namespace GetSqlFunc\Insert;
 class Insert
 {
     private $stmt;
     private $bind_mark;
     private $value;
-    function __construct($value)
+    function Stmt_Loader($value)
     {
         $this->stmt = $value;
     }

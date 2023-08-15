@@ -2,6 +2,7 @@
 /*
 author:海月(SeaMonn)
 */
+namespace GetSqlFunc;
 class GetSqlFunc
 {
     private $con;
@@ -16,11 +17,13 @@ class GetSqlFunc
     private array $SupportedFunc = array('select', 'update', 'insert', 'delete');
     private $table;
     private $FuncEssential = array();
-    function __construct($value)
+    function __construct()
     {
-        $this->con = $value;
-        $this->stmt = mysqli_stmt_init($this->con);
         $this->FuncEssential['clause'] = false;
+    }
+    public function Connect_Loader($con){
+        $this->con = $con;
+        $this->stmt = mysqli_stmt_init($this->con);
     }
     public function OperateInitializing($mode, $args)
     {
@@ -86,6 +89,7 @@ class GetSqlFunc
             if ($this->RequestLocking) {
                 return array('status' => false, 'reason' => $this->StopReason);
             } else {
+                $this->Module[$this->Mode]->Stmt_Loader($this->stmt);
                 $callback = $this->Module[$this->Mode]->Do($this->FuncEssential);
                 //var_dump($this->Module);
                 if ($this->Savingopt) {
@@ -161,17 +165,17 @@ class GetSqlFunc
         switch ($this->Mode) {
             case 'select':
                 $tmp = $this->BoostingModule('select');
-                $this->Module[$this->Mode] = new Select($this->stmt);
+                $this->Module[$this->Mode] = new Select\Select($this->stmt);
                 return $this->SubmitRequest();
                 break;
             case 'insert':
                 $tmp = $this->BoostingModule('insert');
-                $this->Module[$this->Mode] = new Insert($this->stmt);
+                $this->Module[$this->Mode] = new Insert\Insert($this->stmt);
                 return $this->SubmitRequest();
                 break;
             case 'update':
                 $tmp = $this->BoostingModule('update');
-                $this->Module[$this->Mode] = new Update($this->stmt);
+                $this->Module[$this->Mode] = new Update\Update($this->stmt);
                 $this->FuncEssential['con'] = $this->con;
                 return $this->SubmitRequest();
                 break;
