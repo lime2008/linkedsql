@@ -5,7 +5,23 @@
 可以根据自己需要修改或添加目录下的入口或操作文件来达到自己的需求
 近期修复了诸多bug，可以放心使用，本仓库还会继续随着个人项目开发的需求而持续优化更新
 # How to use?
-填写好数据库信息并实例化类，各个使用例子如下:  
+先准备好数据库名，用户名和密码，然后创建一个连接句柄：
+```php 
+$con = new mysqli(127.0.0.1,$user,$pwd,$dbname);
+```
+接着引入入口文件：
+```php 
+require 'sqlfunc.php';
+```
+实例化类：
+```php
+$sql = new \GetSqlFunc\GetSqlFunc();
+```
+绑定一个数据库连接句柄，在后续需要操作其他数据库的时候可以再次用以下代码绑定新的数据库连接句柄！
+```php
+$sql->Connect_Loader($con);
+```
+最后，各个查询的使用例子如下:  
 SELECT:  
 ```php
 $sql->select('表名')->key(array('想查询的键',...))->clause(array('查询的键',...))->bind(array('绑定查询值',...))->run();  
