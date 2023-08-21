@@ -7,7 +7,7 @@
 # How to use?
 先准备好数据库名，用户名和密码，然后创建一个连接句柄：
 ```php 
-$con = new mysqli(127.0.0.1,$user,$pwd,$dbname);
+$con = new mysqli('127.0.0.1',$user,$pwd,$dbname);
 ```
 接着引入入口文件：
 ```php 
