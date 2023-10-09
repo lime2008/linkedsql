@@ -181,7 +181,7 @@ class GetSqlFunc
                 break;
             case 'delete':
                 $tmp = $this->BoostingModule('delete');
-                $this->Module[$this->Mode] = new Delete($this->stmt);
+                $this->Module[$this->Mode] = new Delete\Delete($this->stmt);
                 $this->FuncEssential['con'] = $this->con;
                 return $this->SubmitRequest();
                 break;
